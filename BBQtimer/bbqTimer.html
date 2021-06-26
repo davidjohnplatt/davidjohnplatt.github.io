@@ -1,0 +1,161 @@
+<html>
+    <head>
+	    <meta charset="UTF-8">
+	    <title>BBQ Timer</title>
+	    <style>
+	        #grid {
+		        background-color: yellow;
+		        display: grid;
+		        padding: 20px;
+		        grid-column-gap: 20px;
+		        grid-row-gap: 10px;
+		        grid-template-columns: 100px auto;
+	        }
+	 
+	        .grid-item {
+		        background-color: yellow;
+		        font-size: 13px;
+		        padding: 10px;
+	        }
+	 
+	        .heading {
+		        text-align: center;
+	        }
+	 
+	        h1{
+		        background-color: white;  
+	        }
+	 
+	        textarea {
+		        resize: none;
+	        }
+	    </style>
+        <script>
+            function process(){
+//			    getSelection();
+			    sideOne();  
+		    }
+
+
+            function countdown(){
+                var stump = 0;
+            }
+
+            function setValues(){
+                var sel = document.getElementById("cookTime");
+                document.getElementById("oneSec").value = sel.value / 2;
+			    document.getElementById("twoSec").value = sel.value / 2;
+                document.getElementById("totSec").value = 0;
+                console.log(sel.value);
+            }
+
+            function sideOne() {
+				a=new AudioContext()
+			    if (document.getElementById) {
+				    var oneSec = document.getElementById("oneSec").value;   
+                    if (oneSec < 1) {
+						beep(1000,1000,1000)				
+				    }
+				else {
+					oneSec --;
+                    document.getElementById("oneSec").value = oneSec;
+					incrementTot();
+					setTimeout('sideOne()', 1000);					
+				    }
+                }
+            }
+
+			function sideTwo() {
+			    if (document.getElementById) {
+				    var twoSec = document.getElementById("twoSec").value;  
+
+                    if (twoSec < 1) {
+						beep(1000,1000,1000);			
+				    }
+				else {
+					twoSec --;
+                    document.getElementById("twoSec").value = twoSec;
+					incrementTot();
+					setTimeout('sideTwo()', 1000);
+					
+				    }
+                }
+            }
+/*
+            function sideTwo(){
+                if (document.getElementById) {
+                    var twoSec = document.getElementById("twoSec").value;
+                    while (twoSec > 0){
+                        twoSec --
+                        console.log(twoSec);
+                        document.getElementById("twoSec").value = twoSec;
+                        setTimeout('updateTot()', 1000);
+                    }
+                }
+            }
+*/
+            function beep(vol, freq, duration){
+                v=a.createOscillator()
+                u=a.createGain()
+             	v.connect(u)
+                v.frequency.value=freq
+                v.type="square"
+                u.connect(a.destination)
+                u.gain.value=vol*0.01
+                v.start(a.currentTime)
+                v.stop(a.currentTime+duration*0.001)
+            }
+
+            function incrementTot(){
+				var totSec = document.getElementById("totSec").value;
+                totSec ++
+				document.getElementById("totSec").value = totSec;
+            }
+
+        </script>
+    </head>
+    <body >
+	    <form>     
+		    <h1>BBQ Timer</h1>    
+		    <div id="grid">
+			    <div>
+				    <label class="grid-item" for="cookTime">Cook time:</label>
+			    </div>
+			    <div>				
+				    <select id="cookTime" onchange="setValues()">
+				        <option value="60">1:00</option>
+				        <option value="120">2:00</option>
+				        <option value="180">3:00</option>
+				        <option value="240">4:00</option>
+				        <option value="300">5:00</option>
+				        <option value="360">6:00</option>
+				        <option value="420">7:00</option>
+				        <option value="480">8:00</option>
+				        <option value="540">9:00</option>
+				        <option value="600">10:00</option>
+				        <option value="660">11:00</option>
+				        <option value="720">12:00</option>
+				    </select> 
+			    </div>
+		        <div>
+			        <button type="button" onclick="sideOne()"()>Start</button>
+		        </div>
+		        <div>			      
+				    <input type="text" id="oneSec" name="OneSec" >
+		        </div>
+		        <div>
+			        <button type="button" onclick="sideTwo()"()>Flip</button>
+		        </div>
+		        <div>			       
+				    <input type="text" id="twoSec" name="twoSec">
+		        </div>
+		        <div>
+		            <button type="button" onclick="process()"()>Tot Time</button>
+			    </div>
+		        <div>
+				    <input type=text  id="totSec" name="totSec">  
+		        </div>
+		    </div>
+	    </form>         
+    </body>
+</html>
